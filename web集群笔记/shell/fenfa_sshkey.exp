@@ -1,0 +1,29 @@
+#!/usr/bin/expect
+if { $argc != 2 } {
+  send_user "usage: expect fenfa_sshkey.exp file host\n"
+  exit
+}
+
+
+#define var
+set file [lindex $argv 0]
+set host [lindex $argv 1]
+set password "123456"
+#spawn scp /etc/hosts root@10.0.0.142:/etc/hosts
+#spawn scp -P52113 $file oldboy@$host:$dir
+spawn ssh-copy-id -i $file "-p 52113 oldboy888@$host"
+expect {
+         "yes/no"    {send "yes\r";exp_continue}
+         "*password" {send "$password\r"}
+}
+expect eof
+
+exit -noexit {
+  send_user "Oldboy888 say good bye to your!\n"
+}
+
+#script usage
+#expect oldboy-6.exp file host dir
+#example
+#expect fenfa_sshkey.exp file host dir
+#expect fenfa_sshkey.exp ~/hosts 10.0.41:~

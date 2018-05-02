@@ -1,0 +1,38 @@
+satstack脚本汇总
+wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
+yum install salt-master -y
+从端安装salt-minion
+wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-6.repo
+yum install salt-minion -y
+
+将脚本推送指定机器的目录下https://blog.csdn.net/jxm_csdn/article/details/53608784
+salt 'web-test' cp.get_file salt://yum-one_lamp.sh /opt/scripts/yum-one_lamp.sh
+#将负载均衡lb01的脚本拷贝到初始集群node
+salt 'lb01' cp.get_file salt://files/nginx_lb01.sh /home/oldboy/nginx_lb01.sh
+
+
+#从管理机后台执行该脚本
+salt 'lb01' cmd.run '/bin/sh /home/oldboy/nginx_lb01.sh' &
+
+
+批量测试脚本
+cd /srv/salt/
+salt 'backup' cp.get_file salt://scripts/01_one_rsync_Server.sh /home/oldboy/01_one_rsync_Server.sh && salt 'backup' cmd.run '/bin/sh /home/oldboy/01_one_rsync_Server.sh' &
+salt 'nfs01' cp.get_file salt://scripts/02_two_rsync_client.sh /home/oldboy/02_two_rsync_client.sh && salt 'nfs01' cmd.run '/bin/sh /home/oldboy/02_two_rsync_client.sh' &
+salt 'db01' cp.get_file salt://scripts/mysql_db.sh /home/oldboy/mysql_db.sh && salt 'db01' cmd.run '/bin/sh /home/oldboy/mysql_db.sh' &
+salt 'web01' cp.get_file salt://scripts/yum-one_lnmp.sh /home/oldboy/yum-one_lnmp.sh && salt 'web01' cmd.run '/bin/sh /home/oldboy/yum-one_lnmp.sh' &
+salt 'web01' cp.get_file salt://scripts/03_Inotify+SersynCrsync.sh /home/oldboy/03_Inotify+SersynCrsync.sh && salt 'web01' cmd.run '/bin/sh /home/oldboy/03_Inotify+SersynCrsync.sh' &
+salt 'web02' cp.get_file salt://scripts/yum-one_lamp.sh /home/oldboy/yum-one_lamp.sh && salt 'web02' cmd.run '/bin/sh /home/oldboy/yum-one_lamp.sh' &
+salt 'web02' cp.get_file salt://scripts/03_Inotify+SersynCrsync.sh /home/oldboy/03_Inotify+SersynCrsync.sh && salt 'web02' cmd.run '/bin/sh /home/oldboy/03_Inotify+SersynCrsync.sh' &
+salt 'lb01' cp.get_file salt://scripts/nginx_lb01.sh /home/oldboy/nginx_lb01.sh && salt 'lb01' cmd.run '/bin/sh /home/oldboy/nginx_lb01.sh' &
+salt 'lb02' cp.get_file salt://scripts/nginx_lb02.sh /home/oldboy/nginx_lb02.sh && salt 'lb02' cmd.run '/bin/sh /home/oldboy/nginx_lb02.sh' &
+
+minion端修改
+sed -i 's#\#master: salt#master: 172.16.1.61#' /etc/salt/minion
+sed -i 's#\#id:#id: backup#' /etc/salt/minion
+sed -i 's#\#id:#id: nfs01#' /etc/salt/minion
+sed -i 's#\#id:#id: web01#' /etc/salt/minion
+sed -i 's#\#id:#id: web02#' /etc/salt/minion
+sed -i 's#\#id:#id: db01#' /etc/salt/minion
+sed -i 's#\#id:#id: lb01#' /etc/salt/minion
+sed -i 's#\#id:#id: lb02#' /etc/salt/minion

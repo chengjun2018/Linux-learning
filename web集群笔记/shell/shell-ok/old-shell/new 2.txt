@@ -1,0 +1,40 @@
+echo -e "NameVirtualHost *:80\n
+<VirtualHost *:80>\n
+    ServerAdmin 278028843@qq.com\n
+    DocumentRoot \"/application/apache2.2.31/htdocs/www\"\n
+    ServerName www.51cto.com\n
+    ServerAlias 51cto.com\n
+    ErrorLog \"logs/www-error_log\"\n
+    CustomLog \"logs/www-access_log\" common\n
+</VirtualHost>\n
+<VirtualHost *:80>\n
+    ServerAdmin 278028843@qq.com\n
+    DocumentRoot \"/application/apache2.2.31/htdocs/blog\"\n
+    ServerName blog.51cto.com\n
+    ErrorLog \"logs/blog-error_log\"\n
+    CustomLog \"logs/blog-access_log\" common\n
+</VirtualHost>\n
+<VirtualHost *:80>\n
+    ServerAdmin 278028843@qq.com\n
+    DocumentRoot \"/application/apache2.2.31/htdocs/bbs\"\n
+    ServerName bbs.51cto.com\n
+    ErrorLog \"logs/bbs-error_log\"\n
+    CustomLog \"logs/bbs-access_log\" common\n
+</VirtualHost>"|egrep -v "^$" >httpd-vhosts.conf
+
+/application/apache/bin/apachectl -t
+/application/apache/bin/apachectl graceful
+
+echo -e "<?php\n
+phpinfo():\n
+?>"
+ 
+echo -e "<?php\n
+  \$link_id=mysql_connect('db01.51cto.com','wordpress','123456') or mysql_error();\n
+     if(\$link_id) {\n
+             echo \"mysql successful by cj wordpress\";\n
+     }\n
+     else{\n
+             echo mysql_error();\n
+     }\n
+?>" mysql.php

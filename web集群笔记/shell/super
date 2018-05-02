@@ -1,0 +1,29 @@
+#!/bin/bash
+
+echo -e "                           \e[31mwelcome to use cj jumpserver              "
+echo -e "\e[32m"
+echo -e "##########################pleaes choose you want to connect server#############:
+#                         1: 172.16.1.31(NFS01)                             #
+#                         2: 172.16.1.41(backup01)                          #
+#                         3: 172.16.1.8(web01)                              #
+#                         4: 172.16.1.61(m01)                               #
+#                         q: use local server                               #
+#############################################################################
+",\033[37m\033[0m,
+
+while [True]:
+do
+read -p "" num
+case "$num" in
+1) ssh 172.16.1.31 && echo "Pleaes choose you want to connect server" ;;
+2) ssh 172.16.1.41 && echo "Pleaes choose you want to connect server" ;;
+3) ssh 172.16.1.8 && echo "Pleaes choose you want to connect server" ;;
+4) ssh 172.16.1.61 && echo "Pleaes choose you want to connect server" ;;
+q) exit ;;
+*) echo "input error please input Again"
+
+esae
+
+done
+
+

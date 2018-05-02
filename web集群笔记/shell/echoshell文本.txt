@@ -1,0 +1,52 @@
+nfs01-打包，推送，delete过期包-nfs01-1.31
+echo -e "#\!/bin/bash\n
+#the is web server backup /var/www/html to /backup\n
+#zuozhe cj\n
+#time 20180328\n
+IP=\$(ifconfig eth1|awk -F "[ :]+" 'NR==2{print $4}')\n
+HT=\"/var/www/\"\n
+BK=\"/backup/\"\n
+Time=\$(date +%F)\n
+Path=\"/backup/\$IP\"\n
+if [ \$(date +%w) -eq 0 ]\n
+then\n
+    Time=\$(date +%F -d "-1day")\n
+fi\n
+else\n
+   Time=\$(date +%F -d "-1day")\n
+fi\n
+[ ! -d \$Path ]  &&  mkdir $BK/\$IP -p\n
+LANG=en\n
+cd \$HT\n
+/bin/tar zcf \$Path/html_\$Time.tar.gz ./html/ &&\n
+find \$BK -type f -name "*\$Time.tar.gz"|xargs md5sum >>\$Path/flag_\$Time.log\n
+cd \$BK\n
+/usr/bin/rsync  -az \$BK rsync_backup@172.16.1.41::backup/ --password-file=/etc/rsync.password\n
+/bin/find \$BK -type f -mtime +7 \( -name "*.log" -o -name "*.tar.gz" \)|xargs rm -f"\" |grep -v "^$" >bk_rsync.sh
+chmod +x bk_rsync.sh
+"#backup WebServer /var/www/html and rsync to BackupServer\n00 00 * * * /bin/sh /server/scripts/bk_rsync.sh >/dev/null 2>&1"
+
+#添加备份检查及邮件通知and删除过期备份-backup服务端1.41
+
+echo -e "#\!/bin/bash\n
+##md5sum flag Key and mail to 278028843\n
+#zuozhe\n
+#time-20180329\n
+IP=\$(ifconfig eth1|awk -F "[ :]+" 'NR==2{print $4}')\n
+Path=\"/backup/\"\n
+if [ \$(date +%w) -eq 0 ]
+then
+   Time=week_\$(date +%F_%w -d "-1day")
+else
+   Time=\$(date +%F -d "-1day")
+fi
+LANG=en
+find \$Path  -type f -name "*\${Time}*.log"|xargs md5sum -c >>\$Path/mail_cj_\${Time}.log 2>&1
+#mail to administrator
+mail -s "\$Time  back" 278028843@qq.com <\$Path/mail_cj_\${Time}.log
+##del 180 day and by saturday data  
+/bin/find /backup/ -type f -mtime +180  ! -name "*week*_6*"|xargs rm -f"|grep -v "^$" >/server/scripts/chback.sh
+chmod +x chback.sh
+
+
+

@@ -1,0 +1,5 @@
+fpm -s dir -t rpm -n mysql -v 5.5.49 -d 'mysql' --post-install /server/scripts/mysql_rpm.sh -f /application/mysql-5.5.49/ /tmp/my.cnf
+
+ln -s /application/mysql/lib/libmysqlclient.so.18 /usr/lib64/
+
+zlib-devel,libxml2-devel,libjpeg-devel,libjpeg-turbo-devel,libiconv-devel,freetype-devel,openssl-devel,libpng-devel,gd-devel,libcurl-devel,libxslt-devel,libmcrypt-devel,mcrypt,mhash

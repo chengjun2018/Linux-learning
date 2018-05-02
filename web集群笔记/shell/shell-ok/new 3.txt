@@ -1,0 +1,11 @@
+hostname zabbix
+/bin/sed -i 's#backup#zabbix#' /etc/sysconfig/network
+/bin/echo -e "[yum]\n
+name=Server\n
+baseurl=http://10.0.0.61\n
+enable=1\n
+gpgcheck=0"|egrep -v "^$" >/etc/yum.repos.d/yum.repo
+/bin/sed -i '18a enabled=0' /etc/yum.repos.d/CentOS-Base.repo
+/bin/sed -i '26a enabled=0' /etc/yum.repos.d/CentOS-Base.repo
+/bin/sed -i '34a enabled=0' /etc/yum.repos.d/CentOS-Base.repo
+yum --enablerepo=yum --disablerepo=base,extras,updates,epel list

@@ -1,0 +1,11 @@
+yum  -y install ruby rubygems ruby-devel
+gem sources -a http://mirrors.aliyun.com/rubygems/
+gem sources --remove  http://rubygems.org
+gem sources --remove  http://rubygems.org 
+gem install fpm -v 1.3.3 
+gem install json -v 1.8.3
+gem install ffi -v 1.9.18
+gem install fpm -v 1.3.3
+
+
+mysql,nfs-utils,rpcbind,zlib-devel,libxml2-devel,libjpeg-devel,libjpeg-turbo-devel,libiconv-devel,freetype-devel,libpng-devel,gd-devel,libcurl-devel,libxslt-devel,libmcrypt-devel,mcrypt,mhash,pcre,pcre-devel,openssl-devel'

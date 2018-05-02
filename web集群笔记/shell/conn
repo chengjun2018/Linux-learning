@@ -1,0 +1,14 @@
+#!/bin/bash
+echo "Please enter the root password to get administrator privileges"
+for i in {two,one.0}
+  do
+    zn - root && i=hehe
+    if [ $i == hehe ];then
+     exit
+
+   fi
+   if  [ $i != 0 ];then
+     echo "Please input root password, now You have $i chance"
+   fi
+  done
+exit

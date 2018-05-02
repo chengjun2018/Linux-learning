@@ -1,0 +1,80 @@
+两种一键部署方案
+1、使用expect非交互是ssh秘钥互信，脚本分发及执行
+2、使用saltstack，脚本推送及执行
+
+#一键集群思路#
+一.清单顺序
+1、完成调试各服务器上的脚本；
+2、将脚本用m01管理机推送到各服务上
+3、使用管理机实现批量脚本执行
+4、整体服务调试
+1）BACKUP服务器
+2）nfs01服务器
+3）db01数据库服务器
+4）web01服务器(nginx)
+5）web02服务器（apache）
+6）lb01负载均衡服务器
+7）lb02负载均衡服务器
+8）m01-批量管理服务器
+
+二、完成如下服务的一键安装配置脚本
+###backup服务器 ###脚本-
+01_one_rsync_Server 
+chback.sh 
+
+###nfs服务器 ###脚本-
+02_two_rsync_client  
+
+
+mysql服务器 脚本-
+mysql_db   
+     
+###web01服务器（LNMP）### 脚本-
+03_Inotify+SersynCrsync 
+one_lnmp  
+
+
+###web02服务器(LAMP)### 脚本-
+one_lamp   
+03_Inotify+SersynCrsync 
+
+
+###lb01服务器### 脚本-
+nginx_lb01 
+
+###lb02服务器 ###脚本-
+nginx_lb02 
+
+
+m01服务器 脚本-   
+
+三、测试每台服务器脚本是否成立
+测试机器-web01-调试
+
+四、将脚本用m01管理机推送到各服务上
+lb01 完成 推送及部署
+lb02 完成 推送及部署
+web01 完成 推送及部署
+web02 完成 推送及部署
+db01  完成 推送及部署
+nfs01 完成 推送及部署
+backup 完成 推送及部署
+m01-提前准备好各个脚本
+
+
+
+负载均衡-练习lb01 lb02
+1、初始状态虚拟机做快照
+2、调试一键部署脚本 sh -x 
+
+sed -i 's#\#id:#id: lb02#' /etc/salt/minion
+sed -i 's#\#master: salt#master: 172.16.1.61#' /etc/salt/minion
+/etc/init.d/salt-minion restart
+
+sed -i 's#\#id:#id: lb01#' /etc/salt/minion
+sed -i 's#\#master: salt#master: 172.16.1.61#' /etc/salt/minion
+/etc/init.d/salt-minion restart
+
+sed -i 's#\#id:#id: db01#' /etc/salt/minion
+sed -i 's#\#master: salt#master: 172.16.1.61#' /etc/salt/minion
+/etc/init.d/salt-minion restart
